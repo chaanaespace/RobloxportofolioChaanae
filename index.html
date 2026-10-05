@@ -140,25 +140,33 @@ const DATA = {
    AUTO-DETEKSI FILE: png / jpg / jpeg / webp (huruf besar-kecil)
    ====================================================== */
 const EXTS = ["png","jpg","jpeg","webp","PNG","JPG","JPEG","WEBP"];
+function paths(base, folder, exts){
+  const name = base.replace(new RegExp("^"+folder+"/"), "");
+  const out = [];
+  [folder+"/", folder, ""].forEach(p=>exts.forEach(e=>out.push(`${p}${name}.${e}`)));
+  return out;
+}
 function img(base, alt, cls="ph", removeIfMissing=false){
+  const list = paths(base, "foto", EXTS);
   const i = document.createElement("img");
   i.className = cls; i.alt = alt; i.loading = "lazy";
   let n = 0;
   i.onerror = () => {
     n++;
-    if(n < EXTS.length){ i.src = `${base}.${EXTS[n]}`; }
+    if(n < list.length){ i.src = list[n]; }
     else if(removeIfMissing){ (i.closest(".card")||i).remove(); }
     else{ i.classList.add("missing"); i.onerror = null; }
   };
-  i.src = `${base}.${EXTS[0]}`;
+  i.src = list[0];
   return i;
 }
 function video(base){
   const v = document.createElement("video");
   v.controls = true; v.preload = "metadata"; v.muted = true; v.playsInline = true;
-  ["mp4","webm","mov"].forEach(e=>{
+  paths(base, "video", ["mp4","webm","mov"]).forEach(u=>{
     const s = document.createElement("source");
-    s.src = `${base}.${e}`; s.type = e==="mov" ? "video/quicktime" : `video/${e}`;
+    const e = u.split(".").pop();
+    s.src = u; s.type = e==="mov" ? "video/quicktime" : `video/${e}`;
     v.appendChild(s);
   });
   return v;
