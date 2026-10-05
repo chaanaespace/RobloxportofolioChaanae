@@ -143,7 +143,7 @@ const EXTS = ["png","jpg","jpeg","webp","PNG","JPG","JPEG","WEBP"];
 function paths(base, folder, exts){
   const name = base.replace(new RegExp("^"+folder+"/"), "");
   const out = [];
-  [folder+"/", folder, ""].forEach(p=>exts.forEach(e=>out.push(`${p}${name}.${e}`)));
+  [folder+"/"+folder, folder+"/", folder, ""].forEach(p=>exts.forEach(e=>out.push(`${p}${name}.${e}`)));
   return out;
 }
 function img(base, alt, cls="ph", removeIfMissing=false){
@@ -163,13 +163,19 @@ function img(base, alt, cls="ph", removeIfMissing=false){
 function video(base){
   const v = document.createElement("video");
   v.controls = true; v.preload = "metadata"; v.muted = true; v.playsInline = true;
-  paths(base, "video", ["mp4","webm","mov"]).forEach(u=>{
+  v.dataset.base = base;
+  return v;
+}
+function initVideo(v){
+  const list = paths(v.dataset.base, "video", ["mp4","webm","mov"]);
+  list.forEach((u,k)=>{
     const s = document.createElement("source");
     const e = u.split(".").pop();
     s.src = u; s.type = e==="mov" ? "video/quicktime" : `video/${e}`;
+    if(k === list.length-1) s.addEventListener("error", ()=>{ const c = v.closest(".card"); if(c) c.remove(); });
     v.appendChild(s);
   });
-  return v;
+  v.load();
 }
 function card(media, title, small, extra=""){
   const c = document.createElement("div");
@@ -261,11 +267,11 @@ const slides = [];
   s.appendChild(head("3D Commission & Animation Rigging", "Standar R6 / R15."));
   s.appendChild(sec("Foto"));
   const g = grid(); g.classList.add("g3");
-  for(let i=1;i<=6;i++) g.appendChild(card(img(`foto/3d-${i}`, `3D ${i}`), `3D Hasil ${i}`, ""));
+  for(let i=1;i<=10;i++) g.appendChild(card(img(`foto/3d-${i}`, `3D ${i}`, "ph", true), `3D Hasil ${i}`, ""));
   s.appendChild(g);
   s.appendChild(sec("Video Singkat"));
-  const g2 = grid(); g2.classList.add("g2");
-  for(let i=1;i<=4;i++) g2.appendChild(card(video(`video/3d-${i}`), `Video ${i}`, "Animasi / rigging"));
+  const g2 = grid();
+  for(let i=1;i<=8;i++) g2.appendChild(card(video(`video/3d-${i}`), "Video Animasi & VFX", "Animasi / rigging / efek 3D"));
   s.appendChild(g2);
   s.appendChild(priceBox("Rate Harga 3D Commission & Animation Rigging", "Rp 5.000 - Rp 200.000", "Tergantung tingkat kerumitan model dan animasi."));
   slides.push(s);
@@ -333,6 +339,7 @@ addEventListener("touchend", e=>{
   const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
   if(Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) go(cur + (dx<0?1:-1));
 });
+document.querySelectorAll("video[data-base]").forEach(initVideo);
 go(0);
 </script>
 </body>
