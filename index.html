@@ -62,6 +62,7 @@ video{width:100%;aspect-ratio:16/10;background:#000;display:block}
 .socials{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
 .btn.alt{background:var(--card)}.btn.alt:hover{background:#18305f}
 .btn.big{padding:13px 24px;font-size:16px}
+.btn.saweria{background:#faa628;color:#1a1204;font-weight:700}.btn.saweria:hover{background:#ffbb4d}
 @supports(height:100dvh){html,body,#track,.slide{height:100dvh}}
 @media(max-width:900px){.g3{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){
@@ -129,7 +130,8 @@ const DATA = {
   lesInfo: "Menerima les offline di sekitar Kota Makassar maupun di luar Makassar, serta online lewat Discord/Zoom. Materi dan jadwal disesuaikan dengan kemampuan murid. Hubungi saya untuk biaya dan jadwal.",
   kolab: ["Oziw Terla", "Neko Omen", "Dev terkenal lainnya"],
   sosmed: [
-    {nama:"Join Discord", link:"https://discord.gg/aFtjnG9vc", utama:true},
+    {nama:"Join Discord", link:"https://discord.gg/reyznQKvmb", utama:true},
+    {nama:"Dukung via Saweria", link:"https://saweria.co/risaatifah", saweria:true},
     {nama:"Facebook",  link:"https://www.facebook.com/risa.saripa.7"},
     {nama:"Instagram", link:"https://www.instagram.com/risaatifah/"},
     {nama:"TikTok",    link:""}
@@ -296,9 +298,9 @@ const slides = [];
   DATA.kolab.forEach((n,i)=> g.appendChild(card(img(`foto/kolab-${i+1}`, n), n, "Satu project bersama")));
   s.appendChild(g);
   const e = document.createElement("div"); e.className = "end rv";
-  const so = DATA.sosmed.filter(x=>x.link).map(x=>`<a class="btn ${x.utama?"big":"alt"}" href="${x.link}" target="_blank" rel="noopener">${x.nama}</a>`).join("");
+  const so = DATA.sosmed.filter(x=>x.link).map(x=>`<a class="btn ${x.utama?"big":x.saweria?"big saweria":"alt"}" href="${x.link}" target="_blank" rel="noopener">${x.nama}</a>`).join("");
   e.innerHTML = `<h2>Terima kasih sudah berkunjung</h2>
-    <p>Siap membuat VFX 3D, animation rigging, map, atau system untuk project kamu. Join channel Discord saya untuk mendapatkan asset gratis buatan saya sendiri dan untuk diskusi commission.</p>
+    <p>Siap membuat VFX 3D, animation rigging, map, atau system untuk project kamu. Join channel Discord saya untuk mendapatkan asset gratis buatan saya sendiri dan untuk diskusi commission. Suka dengan karya saya? Dukung lewat Saweria.</p>
     <div class="socials">${so}</div>`;
   s.appendChild(e);
   slides.push(s);
